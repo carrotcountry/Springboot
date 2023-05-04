@@ -47,19 +47,12 @@ public class OrderController {
             JSONArray array = new JSONArray(json);
 
 
-//            System.out.println("array : " + array);
-//            System.out.println("array length : " + array.length());
-
-//            for (int i = 0; i < array.length(); i++) {
-//                Object a = array.get(i);
-//                System.out.println("array" + i + " : " + a);
-//            }
-            return "SUCCESS";
+            return "redirect:/orders";
         } catch (Exception e) {
             e.printStackTrace();
             return "FAIL";
         }
-//      return "redirect:/orders";2
+
     }
 
     @GetMapping("/orders")
