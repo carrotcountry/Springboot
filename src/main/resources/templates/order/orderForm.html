@@ -4,10 +4,10 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-    <form role="form" action="/order" method="post">
+    <form method="post" >
         <div class="form-group">
             <label for="member">주문회원</label>
-            <select name="memberId" id="member" class="form-control" >
+            <select name="memberId" id="member" class="form-control">
                 <option value="">회원선택</option>
                 <option
                         th:each="member : ${members}"
@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
             <label for="count">주문수량</label>
-            <input type="number" name="count" class="form-control" id="count" placeholder="주문 수량을 입력하세요" onchange="orderBox3(this)" onclick="" >
+            <input type="number" name="count" class="form-control" id="count" placeholder="주문 수량을 입력하세요" onchange="orderBox3(this)" onclick="">
         </div>
 
         <div id='result'></div>
@@ -43,7 +43,6 @@
 
     let qualified = 0;
     let arr = [];
-    let data = {};
     function orderBox3(e) {
         // let member = /*[[${member}]]*/;
         // let item = /*[[${member}]]*/;
@@ -52,31 +51,21 @@
         const value = e.value;
         // 데이터 출력
         const memberText = member.options[member.selectedIndex].text;
-        // const memberText = members[0].name;
         const memberValue = member.options[member.selectedIndex].value;
-        // const memberValue = members[0].value;
         const count = document.getElementById("count");
 
         const itemValue = item.options[item.selectedIndex].value;
-        // const itemValue = items[0].id;
 
         const itemText = item.options[item.selectedIndex].text;
-        // const itemText = items[0].name;
 
-        // array["One"] = memberText;
-        // array ["item"] = itemText;
-        // array ["count"] = parseInt(count.value);
+        let obj = {
+            member: memberText,
+            memberId: memberValue,
+            item: itemText,
+            count: count.value
+        };
 
-        arr.push({
-            order: {
-                member: memberText,
-                memberId: memberValue,
-                item: itemText,
-                count: count.value
-            }}
-        )
-
-        let orderJSON = JSON.stringify(arr);
+        arr.push(obj);
 
         if(qualified % 2 == 0 && value != "" && itemValue != "" && count.value != "") {
 
@@ -112,12 +101,12 @@
         }
     }
     function orderArray() {
-        console.log(arr);
         $.ajax({
+            // data: {"target" : JSON.stringify(arr)},
+            data: JSON.stringify(arr),
             url: "/order",
-            data: {target : JSON.stringify(arr)},
             type: "POST",
-            // contentType: 'application/json',
+            contentType: "application/json; charset=UTF-8",
             // dataType: "json",
             success: function (data) {
                 console.log("gd");

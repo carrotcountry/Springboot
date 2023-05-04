@@ -40,22 +40,26 @@ public class OrderController {
     }
 
     @ResponseBody
-    @RequestMapping (value = "/order")
-    public String order(@RequestParam HashMap<Object, Object> param) {
+    @RequestMapping (value = "/order", method = RequestMethod.POST)
+    public String order(@RequestBody String json) {
         try {
-            JSONArray array = new JSONArray(param.get("target").toString());  //json 배열
-            System.out.println(array);
-            List<Object> list = array.toList(); //Object를 지닌 배열
-            for (int i = 0; i < list.size(); i++) {
-                Object a = list.get(i);
-                System.out.println(a);
-            }
+            System.out.println("json : " + json);
+            JSONArray array = new JSONArray(json);
+
+
+//            System.out.println("array : " + array);
+//            System.out.println("array length : " + array.length());
+
+//            for (int i = 0; i < array.length(); i++) {
+//                Object a = array.get(i);
+//                System.out.println("array" + i + " : " + a);
+//            }
+            return "SUCCESS";
         } catch (Exception e) {
             e.printStackTrace();
             return "FAIL";
         }
-        return "SUCCESS";
-//        return "redirect:/orders";
+//      return "redirect:/orders";2
     }
 
     @GetMapping("/orders")
