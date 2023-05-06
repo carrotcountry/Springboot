@@ -4,10 +4,10 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-    <form role="form" action="/order" method="post" >
+    <form role="form" action="/order" method="post">
         <div class="form-group">
             <label for="member">주문회원</label>
-            <select name="memberId" id="member" class="form-control">
+            <select name="memberId" id="member" class="form-control" onchange="able(this)">
                 <option value="">회원선택</option>
                 <option
                         th:each="member : ${members}"
@@ -17,7 +17,7 @@
         </div>
         <div class="form-group">
             <label for="item">상품명</label>
-            <select name="itemId" id="item" class="form-control">
+            <select name="itemId" id="item" class="form-control" onchange="able(this)">
                 <option value="">상품선택</option>
                 <option th:each="item : ${items}"
                         th:value="${item.id}"
@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
             <label for="count">주문수량</label>
-            <input type="number" name="count" class="form-control" id="count" placeholder="주문 수량을 입력하세요" onchange="orderBox3(this)" onclick="">
+            <input type="number" name="count" class="form-control" id="count" placeholder="주문 수량을 입력하세요" onchange="sendJson(this)" onclick="" disabled>
         </div>
 
         <div id='result'></div>
@@ -39,14 +39,18 @@
 </body>
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-
-
     let qualified = 0;
     let arr = [];
-    function orderBox3(e) {
-        // let member = /*[[${member}]]*/;
-        // let item = /*[[${member}]]*/;
 
+    const memberName = document.querySelector("#member");
+    const mdName = document.querySelector("#item");
+    const countInput = document.querySelector("#count");
+    function able(e) {
+        if (!mdName.value == "" && !memberName.value == "") {
+            countInput.disabled = false;
+        }
+    }
+    function sendJson(e) {
         // 선택된 데이터 가져오기
         const value = e.value;
         // 데이터 출력
@@ -55,13 +59,13 @@
         const count = document.getElementById("count");
 
         const itemValue = item.options[item.selectedIndex].value;
-
         const itemText = item.options[item.selectedIndex].text;
 
         let obj = {
             member: memberText,
             memberId: memberValue,
             item: itemText,
+            itemId: itemValue,
             count: count.value
         };
 
@@ -79,9 +83,9 @@
             const currentDiv = document.getElementById("div1");
             document.body.insertBefore(newDiv, currentDiv);
 
-            // count.value = null;
-            // member[0].selected = true;
-            // item[0].selected = true;
+            count.value = null;
+            member[0].selected = true;
+            item[0].selected = true;
 
             qualified = 0;
 
@@ -92,28 +96,24 @@
             items = itemValue;
 
             console.log(arr);
-            // console.log(members);
-            // console.log(items);
 
-
-
-            // id가 test2이고 value가 test2인 textbox를 생성한다.
+            countInput.disabled = true;
         }
     }
     function orderArray() {
         $.ajax({
-            // data: {"target" : JSON.stringify(arr)},
             data: JSON.stringify(arr),
             url: "/order",
             type: "POST",
             contentType: "application/json; charset=UTF-8",
-            // dataType: "json",
             success: function (data) {
                 location.href = "/orders"
+            },
+            error: function() {
+                alert("error… ");
             }
         });
     }
-
     /*]]>*/
 </script>
 <script src="https://code.jquery.com/jquery-3.6.4.js"
