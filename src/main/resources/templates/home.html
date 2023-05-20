@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<div class="container">
+<div class="container" th:object="${member}" >
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div class="jumbotron">
         <h1>HELLO SHOP</h1>
@@ -23,7 +23,19 @@
         <p>
             <a class="btn btn-lg btn-info" href="/order">상품 주문</a>
             <a class="btn btn-lg btn-info" href="/orders">주문 내역</a>
+            <a href="#" th:href="@{/cart/{id} (id=${member.id})}"
+               class="btn btn-lg btn-info" role="button">장바구니</a>
         </p>
+        <p class="lead">쿠폰 기능</p>
+        <p>
+            <a class="btn btn-lg btn-success" href="/coupon/register">쿠폰 등록</a>
+            <a class="btn btn-lg btn-success" href="/coupon/list">제공 쿠폰</a>
+            <a href="#" th:href="@{/coupon/{id}/list (id=${member.id})}"
+               class="btn btn-lg btn-success">보유 쿠폰</a>
+        </p>
+
+        <td >
+        </td>
     </div>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->

@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain.item;
 
+import jpabook.jpashop.domain.CartItem;
 import jpabook.jpashop.domain.Category;
 import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
@@ -19,13 +20,16 @@ public abstract class Item {
     @GeneratedValue
     @Column(name = "item_id")
     private Long id;
-
     private String name;
     private int price;
     private int stockQuantity;
 
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "item")
+//    private CartItem cartItem;
+
 
     // 비즈니스 로직
 

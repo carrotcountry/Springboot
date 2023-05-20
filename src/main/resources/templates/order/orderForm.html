@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header" />
 <body>
-<div class="container">
+<div class="container"  th:object="${loggedMember}">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <form role="form" action="/order" method="post">
         <div class="form-group">
@@ -31,7 +31,10 @@
 
         <div id='result'></div>
 
-        <button onclick="orderArray()" id="btn" type="button" class="btn btn-primary" style="margin-top: 20px;">Submit</button>
+        <button onclick="orderArray()" id="OrderBtn" type="button" class="btn btn-primary" style="margin-top: 20px;">Order</button>
+
+        <button onclick="cartArray()" id="CartBtn" type="button" class="btn btn-primary" style="margin-top: 20px;">Cart</button>
+
     </form>
     <br/>
     <div th:replace="fragments/footer :: footer" />
@@ -41,6 +44,9 @@
     /*<![CDATA[*/
     let qualified = 0;
     let arr = [];
+
+    let loggedMember = "[[${loggedMember.id}]]";
+    console.log(loggedMember);
 
     const memberName = document.querySelector("#member");
     const mdName = document.querySelector("#item");
@@ -61,7 +67,7 @@
         const itemValue = item.options[item.selectedIndex].value;
         const itemText = item.options[item.selectedIndex].text;
 
-        let obj = {
+        let orderData = {
             member: memberText,
             memberId: memberValue,
             item: itemText,
@@ -69,7 +75,7 @@
             count: count.value
         };
 
-        arr.push(obj);
+        arr.push(orderData);
 
         if(qualified % 2 == 0 && value != "" && itemValue != "" && count.value != "") {
 
@@ -89,11 +95,8 @@
 
             qualified = 0;
 
-            const btn = document.getElementById("btn");
-            btn.before(newDiv);
-
-            members = memberValue;
-            items = itemValue;
+            const OrderBtn = document.getElementById("OrderBtn");
+            OrderBtn.before(newDiv);
 
             console.log(arr);
 
@@ -108,6 +111,22 @@
             contentType: "application/json; charset=UTF-8",
             success: function (data) {
                 location.href = "/orders"
+            },
+            error: function() {
+                alert("error… ");
+            }
+        });
+    }
+
+    function cartArray() {
+        $.ajax({
+            data: JSON.stringify(arr),
+            url: "/cart/[[${loggedMember.id}]]",
+            type: "POST",
+            contentType: "application/json; charset=UTF-8",
+            success: function (data) {
+                alert("success");
+                location.href = "/cart/[[${loggedMember.id}]]"
             },
             error: function() {
                 alert("error… ");

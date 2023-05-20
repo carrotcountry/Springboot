@@ -11,6 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemRepository {
     private final EntityManager em;
+    //    private final me em;
 
     public void save(Item item){ // 아이템은 아이디에 저장하기 전까지 Id를 가지지 않음
         if(item.getId() == null){ // 즉, 이 if문은 완전히 새로운 객체를 말하는 것 찾고 persist 하는 것

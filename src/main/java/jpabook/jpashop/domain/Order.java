@@ -1,5 +1,8 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,22 +23,26 @@ import static javax.persistence.FetchType.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class  Order {
     @Id @GeneratedValue
+    @JsonBackReference
     @Column(name = "order_id")
     private Long id;
 
     @ManyToOne(fetch = LAZY) //order를 조회할 때 멤버를 조인시켜 함께 가져온다.
     // order와 member는 ManyToOne
     @JoinColumn (name = "member_id") // 매핑을 member_id로 한다는 의미
+    @JsonBackReference
     private Member member;
     // 여기 값을 세팅하면 member_id FK값이 다른 멤버로 변경된다.
 
     // JPQL select o From order o; -> SQL select * from order
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
+    @JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private Delivery delivery;
 
     private LocalDateTime orderDate; //주문 시간
@@ -46,7 +53,6 @@ public class  Order {
     public void setMember(Member member) {
         this.member = member;
         member.getOrders().add(this);
-
     }
 
     public void addOrderItem(OrderItem orderItem){

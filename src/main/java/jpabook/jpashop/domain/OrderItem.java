@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jpabook.jpashop.domain.item.Item;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class OrderItem {
     private Item item;
 
     @ManyToOne(fetch = LAZY)
+    @JsonManagedReference
     @JoinColumn(name = "order_id")
     private Order order;
 

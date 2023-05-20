@@ -28,6 +28,7 @@ public class ItemService {
         findItem.setStockQuantity(stockQuantity);
     }
 
+
     public List<Item> findItems(){
         return itemRepository.findAll();
     }

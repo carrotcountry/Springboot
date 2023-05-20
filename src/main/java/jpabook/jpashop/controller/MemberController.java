@@ -4,6 +4,7 @@ import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,7 +26,7 @@ public class MemberController {
     }
 
     @PostMapping("/members/new")
-    public String create(@Valid MemberForm form, BindingResult result) {
+    public String create(@Valid MemberForm form, BindingResult result, Authentication authentication) {
         if (result.hasErrors()) {
             return "members/createMemberForm";
         }
@@ -34,10 +35,13 @@ public class MemberController {
 
         Member member = new Member();
         member.setName(form.getName());
+        member.setPassword(form.getPassword());
         member.setAddress(address);
 
         memberService.join(member);
-        return "redirect:/";
+
+        System.out.println("member = name, " + member.getName() + " " + member.getId() + " " + member.getPassword());
+        return "redirect:/login";
     }
 
     @GetMapping("/members")
