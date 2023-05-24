@@ -1,15 +1,14 @@
 package jpabook.jpashop.controller;
 import jpabook.jpashop.SessionConst;
 import jpabook.jpashop.domain.Cart;
+import jpabook.jpashop.domain.Coupon;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.repository.OrderSearch;
-import jpabook.jpashop.service.CartService;
-import jpabook.jpashop.service.ItemService;
-import jpabook.jpashop.service.MemberService;
-import jpabook.jpashop.service.OrderService;
+import jpabook.jpashop.service.*;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -27,6 +26,8 @@ public class OrderController {
     private final OrderService orderService;
     private final MemberService memberService;
     private final ItemService itemService;
+
+    private final CouponService couponService;
 
     private final CartService cartService;
 
@@ -78,8 +79,29 @@ public class OrderController {
             } else if (request.getServletPath().equals("/orderFromCart")){
                 System.out.println("json" + json);
                 JSONArray forCartObject = new JSONArray(json);
+//                JSONObject couponId = (JSONObject) forCartObject.getJSONObject("couponId");
+
+
                 for (int i = 0; i < forCartObject.length(); i++) {
                     JSONObject cartJsonObject = (JSONObject)forCartObject.get(i);
+//                    System.out.println("i want this " + cartJsonObject);
+
+
+                    JSONObject couponId = (JSONObject)forCartObject.get(1);
+                    int couponIdForFindCouponBeforeCast = (int) couponId.get("couponId");
+                    System.out.println("hello coupon : " + couponIdForFindCouponBeforeCast);
+                    Long couponIdForFindCoupon = Long.parseLong(String.valueOf(couponIdForFindCouponBeforeCast));
+                    Coupon coupon = couponService.findOne(couponIdForFindCoupon);
+                    Long couponIdForOrder = coupon.getId();
+
+                    JSONArray arrayForClassificationWithCartAndCoupon =  cartJsonObject.getJSONArray("cart_items");
+                    System.out.println("this is for coupon Service : " + arrayForClassificationWithCartAndCoupon);
+
+                    for (int j = 0; j < arrayForClassificationWithCartAndCoupon.length(); j++) {
+                        JSONObject objectOfCartFormJson = (JSONObject)arrayForClassificationWithCartAndCoupon.get(i);
+                        System.out.println("this var : " + objectOfCartFormJson);
+                    }
+
 
                     int CartIdForFindMemberBeforeCast = (int) cartJsonObject.get("id");
                     Long cartIdForFindMember = Long.parseLong(String.valueOf(CartIdForFindMemberBeforeCast));
@@ -98,7 +120,7 @@ public class OrderController {
                         int itemId = (int) itemObject.get("id");
                         Long itemIdForOrder = Long.parseLong(String.valueOf(itemId));
 
-                        orderService.order(cartOwnerId, itemIdForOrder, orderCount);
+                        orderService.order(cartOwnerId, itemIdForOrder, orderCount, couponIdForOrder);
                     }
                 }
                 cartService.allCartItemDelete();

@@ -27,10 +27,13 @@ dependencies {
 	testImplementation 'junit:junit:4.13.1'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
+//	runtimeOnly 'com.h2database:h2'
+	runtimeOnly("com.mysql:mysql-connector-j")
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.json', name: 'json', version: '20160810'
+//	implementation group: 'org.javassist', name: 'javassist', version: '3.29.0-GA'
+//	implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 
 	//JUnit4 추가
 	testImplementation("org.junit.vintage:junit-vintage-engine") {

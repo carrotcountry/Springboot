@@ -20,6 +20,10 @@ public class CouponService {
         couponRepository.save(coupon);
     }
 
+    public Coupon findOne(Long couponId){
+        return couponRepository.find(couponId);
+    }
+
     public List<Coupon> findAllCoupons() {
         return couponRepository.findAll();
     }

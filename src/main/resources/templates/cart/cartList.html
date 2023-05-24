@@ -26,7 +26,9 @@
             </tbody>
         </table>
         <table>
+            <tbody>
             <tr>
+                <h3>쿠폰 사용하기</h3>
                 <select name="couponId" id="coupon" class="form-control" th:object="${coupons}" onchange="couponSelect(cartCost)">
                     <option value="">쿠폰 선택</option>
                     <option
@@ -35,6 +37,7 @@
                             th:text="${coupon.name}" />
                 </select>
             </tr>
+            </tbody>
         </table>
         <br/>
         <table>
@@ -61,7 +64,7 @@
     const couponlist = [[${coupons}]];
     let cartCost = [[${cartCost}]]
     let arr = [cart];
-
+    let JsonForPush = {};
 
 
     const priceText = document.querySelector("#priceText");
@@ -88,7 +91,7 @@
 
                     priceNotice.innerText = "쿠폰 사용 시 가격 :  ";
                     priceText.innerText = couponCost;
-                    couponValue = coupon.options[coupon.selectedIndex].value;
+                    couponValue = couponlist[i].id;
                     break;
                 } else {
                     couponCost = originalCost;
@@ -98,7 +101,7 @@
 
                     priceNotice.innerText = "쿠폰 사용 시 가격 :  ";
                     priceText.innerText = couponCost;
-                    couponValue = coupon.options[coupon.selectedIndex].value;
+                    couponValue = couponlist[i].id;
                     break;
                 }
             } else {
@@ -108,12 +111,14 @@
         }
 
         console.log(couponValue);
-    }
-
-    let JsonForPush = {
+    JsonForPush = {
         "couponId":couponValue
     };
+
     console.log(arr);
+    console.log("this is " + JsonForPush.couponId);
+    }
+
     function cartForOrder() {
         arr.push(JsonForPush);
         console.log(arr);
@@ -123,7 +128,7 @@
             type: "POST",
             contentType: "application/json; charset=UTF-8",
             success: function (data) {
-                alert("success");
+                // alert("success");
                 location.href = "/orders"
             },
             error: function() {

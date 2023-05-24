@@ -1,8 +1,6 @@
 package jpabook.jpashop.repository;
 
-import jpabook.jpashop.domain.CartItem;
 import jpabook.jpashop.domain.Coupon;
-import jpabook.jpashop.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,8 +15,8 @@ public class CouponRepository {
         em.persist(coupon);
     }
 
-    public void find(Long couponId){
-        em.find(Coupon.class, couponId);
+    public Coupon find(Long couponId){
+        return em.find(Coupon.class, couponId);
     }
 
     public List<Coupon> findAll() {

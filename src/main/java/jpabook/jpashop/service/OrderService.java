@@ -25,7 +25,7 @@ public class OrderService {
 
     /** 주문 **/
     @Transactional
-    public Long order(Long memberId, Long itemId, int count) {
+    public Long order(Long memberId, Long itemId, int count, Long couponId) {
         Member member = memberRepository.findOne(memberId);
         Item item = itemRepository.findOne(itemId);
 
